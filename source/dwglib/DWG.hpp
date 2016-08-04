@@ -178,6 +178,7 @@ class LagrangeT : public CircularBuffer2POWSizedT<size>
 	float h[4];
 	int ptL;
 	float actdelay;
+	int xormask;
 	LagrangeT()
 	{
 		//this->buffer_size = size;
@@ -188,6 +189,7 @@ class LagrangeT : public CircularBuffer2POWSizedT<size>
 		lastdelay = 0;
 		ptL = CalcCoeffs(0);
 		//Print("LAGRANGE construc\n");
+		xormask = 0;
 	}
 	int CalcCoeffs(float delay)
 	{
@@ -217,7 +219,7 @@ class LagrangeT : public CircularBuffer2POWSizedT<size>
 		//return this->Buffer[(this->pointer - (int)pos) & this->mask];
 		float sum = 0;
 		for(int i=0; i < 4; i++){
-			sum += this->Buffer[(this->pointer + ptL + i) & this->mask]*h[i];
+			sum += this->Buffer[((this->pointer + ptL + i) ^ xormask) & this->mask]*h[i];
 		}
 		//DUMPONNAN(sum);
 		return sum;

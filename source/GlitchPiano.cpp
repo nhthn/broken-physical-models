@@ -10,6 +10,11 @@ glitched by Nathan Ho
 #include <string.h>
 #include "dwglib/DWG.cpp"
 ///////////////////////////////////////////////////////
+void Piano::xormask(int xormask) {
+  for (int k = 0; k < nstrings; k++) {
+    string[k]->fracdelay3.xormask = xormask;
+  }
+}
 void Piano::trigger(float v){
     this->v0 = v;
     hammer->trigger(v);
@@ -173,6 +178,7 @@ struct GlitchPiano : public Unit
 {
     Piano piano;
     GlitchPiano(Unit *unit):piano(unit){};
+    int xormaskpos;
 };
 extern "C"
 {
@@ -207,6 +213,7 @@ void GlitchPiano_Ctor(GlitchPiano* unit) {
     float loss = ZIN0(inpos++);
     float detune = ZIN0(inpos++);
     int hammer_type = ZIN0(inpos++);
+    unit->xormaskpos = inpos;
 
     gWorld = unit->mWorld;
     //unit->piano= (Piano*) new Piano(unit);
@@ -225,6 +232,10 @@ void GlitchPiano_next(GlitchPiano *unit, int inNumSamples) {
     float * out = OUT(0);
     float velocity = ZIN0(1);
     float gate = ZIN0(2);
+    int xormask = ZIN0(unit->xormaskpos);
+
+    unit->piano.xormask(xormask);
+
     if (gate > 0.0)
         unit->piano.trigger(velocity*10.0);
     unit->piano.go(out,inNumSamples);

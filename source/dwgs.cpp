@@ -26,7 +26,7 @@ void Thiriandispersion(float B, float f, int M, ThirianT<2> *c)
 		Print("KernelA %d %g\n",i,c->KernelA[i]);*/
   }
 }
-dwgs :: dwgs(float f, float Fs, float inpos, float c1, float c3, float B, float Z, float Zb, float Zh,Unit* unit) 
+dwgs :: dwgs(float f, float Fs, float inpos, float c1, float c3, float B, float Z, float Zb, float Zh,Unit* unit)
 {
   float deltot = Fs/f;
   int del1 = (int)(inpos*0.5*deltot);
@@ -43,7 +43,7 @@ dwgs :: dwgs(float f, float Fs, float inpos, float c1, float c3, float B, float 
   }
   //float dispersiondelay = M*groupdelay(&(dispersion[0]),f,Fs);
   float dispersiondelay = M*dispersion[0].groupdelay(f,Fs);
-  
+
   //loss(f,Fs,c1,c3,&lowpass);
   //float lowpassdelay = groupdelay(&lowpass,f,Fs);
 	lowpass.setcoeffs(f,c1,c3);
@@ -57,19 +57,19 @@ dwgs :: dwgs(float f, float Fs, float inpos, float c1, float c3, float B, float 
 	//Print("del3 %g\n",del3);
   if(del3 < 2)
     del3 = 1;
-  
+
   float D = (deltot-(float)(del1+del1+del2+del3+dispersiondelay+lowpassdelay));
-  
+
   //thirian(D,(int)D,&fracdelay);
   //float tuningdelay = groupdelay(&fracdelay,f,Fs);
 	//Print("fractional delay %g  unit %p\n",D,unit);
-	
-	
+
+
 	//fracdelay2 = new(unit) Thirian(unit,D,(int)D);
 	fracdelay3.setdelay(D);
 	float tuningdelay= D;//fracdelay3.groupdelay(f,Fs);
 	//fracdelay3.setdelay(del3);
-	
+
  // printf("total delay = %g/%g, leftdel = %d/%d, rightdel = %d/%d, dispersion delay = %g, lowpass delay = %g, fractional delay = %g/%g\n",del1+del1+del2+del3+dispersiondelay+lowpassdelay+tuningdelay,deltot, del1, del1, del2, del3, dispersiondelay, lowpassdelay, tuningdelay,D);
 
   d[0] = new dwg(Z,del1,del1,0,this);
@@ -79,7 +79,7 @@ dwgs :: dwgs(float f, float Fs, float inpos, float c1, float c3, float B, float 
   d[3] = new dwg(Zh,0,0,0,this);
 
   d[0]->connectRight(d[1]->l);
-  d[1]->connectLeft(d[0]->r);  
+  d[1]->connectLeft(d[0]->r);
   d[1]->connectRight(d[2]->l);
   d[2]->connectLeft(d[1]->r);
 
@@ -107,7 +107,7 @@ dwgs :: ~dwgs()
 	}else{
 		for(int k=0;k<4;k++)
 			destroy_filter(&(dispersion[k]));
-		
+
 	}*/
 }
 
@@ -139,7 +139,7 @@ dwg :: dwg(float z, int del1, int del2, int commute, dwgs *parent) {
 void dwg :: init()
 {
   float ztot;
-  
+
   ztot = l->z;
   for(int k=0;k<nl;k++) {
     ztot += cl[k]->z;
@@ -157,7 +157,7 @@ void dwg :: init()
   for(int k=0;k<nr;k++) {
     alphar[k] = 2.0 * cr[k]->z / ztot;
   }
-  
+
 }
 
 dwg :: ~dwg()
@@ -195,19 +195,19 @@ void dwg :: dodelay() {
     dar = r->a[0];
   else
     dar = delay(r->a[0],&(d[0]));
-  
+
   float dal;
   if(del2==1)
     dal = l->a[1];
-  else 
+  else
     dal = delay(l->a[1],&(d[1]));
-  
+
   l->a[0] = dar;
   r->a[1] = dal;
 }
 
 void dwg :: doload() {
-  if(nl == 0) 
+  if(nl == 0)
     loadl = 0;
   else {
     loadl = alphalthis * l->a[0];
@@ -217,9 +217,9 @@ void dwg :: doload() {
       loadl += alphal[k] * cl[k]->a[polarity];
     }
   }
-  
-  if(nr == 0) 
-    loadr = 0; 
+
+  if(nr == 0)
+    loadr = 0;
   else {
     loadr = alpharthis * r->a[1];
     for(int k=0;k<nr;k++) {
@@ -239,7 +239,7 @@ void dwg :: update() {
     }
   }
   l->a[1] = a;
-  
+
   a = (loadr - r->a[1]);
   if(commute) {
    // a = filter(a,&(parent->lowpass));
@@ -261,21 +261,21 @@ float dwgs :: go_hammer(float load)
 {
   d[3]->l->load = load;
   for(int k=0;k<2;k++) {
-    d[k]->dodelay();		
+    d[k]->dodelay();
   }
-  
+
   return d[1]->r->a[1];
 }
 
 float dwgs :: go_soundboard(float load) {
   d[2]->l->load = load;
   for(int k=0;k<3;k++) {
-    d[k]->doload();		
+    d[k]->doload();
   }
 
   for(int k=0;k<3;k++) {
-    d[k]->update();		
+    d[k]->update();
   }
-  
+
   return d[2]->l->a[1];
 }

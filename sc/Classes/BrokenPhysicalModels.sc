@@ -4,6 +4,15 @@ GlitchPiano : UGen {
             freq = 440,
             vel = 1,
             t_gate = 0,
+            xormask = 0;
+        ^this.arfull(freq, vel, t_gate, xormask: xormask);
+    }
+
+    *arfull {
+        arg
+            freq = 440,
+            vel = 1,
+            t_gate = 0,
             rmin = 0.35,
             rmax = 2,
             rampl = 4,
@@ -24,7 +33,8 @@ GlitchPiano : UGen {
             hpos = 0.142,
             loss = 1,
             detune = 0.0003,
-            hammer_type = 1;
-        ^this.multiNew('audio', freq, vel, t_gate, rmin, rmax, rampl, rampr, rcore, lmin, lmax, lampl, lampr, rho, e, zb, zh, mh, k, alpha, p, hpos, loss, detune, hammer_type);
+            hammer_type = 1,
+            xormask = 0;
+        ^this.multiNew('audio', freq, vel, t_gate, rmin, rmax, rampl, rampr, rcore, lmin, lmax, lampl, lampr, rho, e, zb, zh, mh, k, alpha, p, hpos, loss, detune, hammer_type, xormask);
     }
 }

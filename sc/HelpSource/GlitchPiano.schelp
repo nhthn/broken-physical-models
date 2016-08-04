@@ -1,0 +1,110 @@
+TITLE:: GlitchPiano
+summary:: Bit-bending on OteyPianoStrings
+categories:: UGens>PhysicalModels
+related:: Classes/OteyPianoStrings
+
+DESCRIPTION::
+GlitchPiano is a variant of OteyPianoStrings that adds an intentional glitch to the internal delay lines. In particular, a bitwise XOR operation is added to the delay index.
+
+CLASSMETHODS::
+
+METHOD:: ar
+This removes many arguments to OteyPianoStrings.ar by setting them to default values to remove clutter from the IDE autocomplete.
+
+ARGUMENT:: freq
+Frequency.
+
+ARGUMENT:: vel
+Key pulsation velocity. Betwen 0 and 1.
+
+ARGUMENT:: t_gate
+Retriggers note, use a TriggerControl for not retriggering continuosly.
+
+ARGUMENT:: xormask
+The bitwise XOR mask applied to the index into the internal delay buffers. The delay buffers are 1024 samples long, so this is taken modulo 1024.
+
+Setting the xormask to 0 is equivalent to no glitching at all.
+
+
+METHOD:: arfull
+Equivalent to OteyPianoStrings.ar, with the additional xormask argument.
+
+argument::freq
+Sound frequency.
+
+argument::vel
+Key pulsation velocity. Betwen 0 and 1.
+
+argument::t_gate
+Retriggers note, use a TriggerControl for not retriggering continuosly.
+
+argument::rmin
+minimum string radio
+
+argument::rmax
+maximun string radio
+
+argument::rampl
+radius left sigmoidal shape.
+
+argument::rampr
+radius right sigmoidal shape.
+
+argument::rcore
+cord nucleus radio.
+
+argument::lmin
+minimum string length.
+
+argument::lmax
+maximum string length.
+
+argument::lampl
+lenght left sigmoidal shape.
+
+argument::lampr
+lenght right sigmoidal shape.
+
+argument::rho
+string density multiplier.
+
+argument::e
+young modulus multiplier.
+
+argument::zb
+bridge impedance multiplier.
+
+argument::zh
+hammer impedance multiplier.
+
+argument::mh
+mass hammer multiplier.
+
+argument::k
+force hammer multiplier.
+
+argument::alpha
+hysteresys hammer multiplier.
+
+argument::p
+stiffness_exponent_hammer multiplier.
+
+argument::hpos
+hammer position. (0 to 1)
+
+argument::loss
+string loss factor.
+
+argument::detune
+detuning among 3 strings.
+
+argument::hammer_type
+1 is Stulov model, 2 is Banks model.
+
+ARGUMENT:: xormask
+The bitwise XOR mask applied to the index into the internal delay buffers. The delay buffers are 1024 samples long, so this is taken modulo 1024.
+
+INSTANCEMETHODS::
+
+
+EXAMPLES::

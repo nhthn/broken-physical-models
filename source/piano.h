@@ -27,6 +27,7 @@ class Piano {
   long go(float *out, int samples);
   float getResampleRatio();
   void trigger(float v);
+  void xormask(int xormask);
 
 	Unit * unit;
 	/*
@@ -42,7 +43,7 @@ class Piano {
 
 		RTFree(lpc->world, (Piano*)pObject);
 	}*/
-	
+
   void* operator new(size_t sz){
 		return RTAlloc(gWorld, sizeof(Piano));
 	}
@@ -60,7 +61,7 @@ class Piano {
   float Zb;
   float Zh;
   float f;
-  
+
   int nstrings;
   dwgs *string[3];
   Hammer *hammer;
